@@ -24,7 +24,7 @@ logger.add(sys.stdout, level="INFO", format="{time} {level} {message}", backtrac
 router = APIRouter()
 
 
-@router.post("/register")
+@router.post("/auth/register")
 async def register_user(user: User, db: AsyncSession = Depends(get_db)):
     """
     Регистрация нового пользователя.
@@ -54,7 +54,7 @@ async def register_user(user: User, db: AsyncSession = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/token")
+@router.post("/auth/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     """
     Авторизация пользователя и получение токена доступа.
@@ -79,7 +79,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
-@router.post("/refresh-token")
+@router.post("/auth/refresh")
 async def refresh_access_token(refresh_token: str = Body(..., embed=True), db: AsyncSession = Depends(get_db)):
     """
     Обновление токенов с использованием refresh токена.

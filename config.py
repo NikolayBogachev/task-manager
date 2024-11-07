@@ -5,7 +5,7 @@ from pydantic.v1 import BaseSettings
 
 
 class Settings(BaseSettings):
-    TOKEN: str
+    REDIS_URL: str
     URL_DB: str
     SECRET_KEY: str
     ALGORITHM: str

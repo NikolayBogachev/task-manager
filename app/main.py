@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Chat-Bot", lifespan=lifespan)
+app = FastAPI(title="task_manager", lifespan=lifespan)
 
 
 main_api_router = APIRouter()
