@@ -24,9 +24,9 @@ class UserInDB(TunedModel):
     username: str
 
 
-class UserOut(TunedModel):
+class UserOut(User):
+
     id: int
-    username: str
 
 
 # Модели для Task
