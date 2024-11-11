@@ -202,6 +202,7 @@ async def get_tasks(
     return tasks
 
 
+
 @router.put("/tasks/{task_id}", response_model=TaskOut)
 async def update_task(
         task_id: int,
