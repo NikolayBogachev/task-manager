@@ -24,8 +24,24 @@
 
 ### 1. Клонирование репозитория
 
-Сначала клонируйте репозиторий с GitHub (или другого источника) на ваш локальный компьютер.
+Сначала клонируйте репозиторий с GitHub на ваш локальный компьютер.
 
 ```bash
-git clone https://github.com/your-repository/task-manager.git
+git clone https://github.com/NikolayBogachev/task-manager.git
 cd task-manager
+```
+
+### 2. Создание образов и запуск контейнеров
+
+Убедитесь, что у вас установлен Docker и Docker Compose. Для запуска приложения с использованием Docker Compose выполните команду:
+
+
+```bash
+docker-compose up --build
+```
+
+### 3. Доступ к приложению
+
+После запуска контейнеров ваше приложение будет доступно по адресу:
+
+http://localhost:8000
