@@ -131,7 +131,7 @@ async def refresh_access_token(refresh_token: str = Body(..., embed=True),
     refresh_token_expires = timedelta(days=7)
     new_refresh_token = AuthService.create_refresh_token(data={"sub": username}, expires_delta=refresh_token_expires)
 
-    # Сохраняем новый refresh токен в Redis с истечением срока действия
+
     await redis.setex(f"refresh_token:{username}", refresh_token_expires.total_seconds(), new_refresh_token)
 
     return {
