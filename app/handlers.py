@@ -3,8 +3,9 @@ from typing import List, Optional
 
 from fastapi.params import Body
 from loguru import logger
+from redis import Redis
 
-
+from database import redis
 from database.db import AsyncSession, get_db
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -14,6 +15,7 @@ from app.pydantic_models import User, TaskOut, TaskCreate, TaskUpdate, TaskBase
 from app.auth import AuthService, oauth2_scheme
 from config import config
 from database.mod import UserInDB, Task
+from database.redis import get_redis
 
 logger.remove()
 logger.add(sys.stdout, level="INFO", format="{time} {level} {message}", backtrace=True, diagnose=True)
@@ -92,7 +94,9 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
 
 
 @router.post("/auth/refresh")
-async def refresh_access_token(refresh_token: str = Body(..., embed=True), db: AsyncSession = Depends(get_db)):
+async def refresh_access_token(refresh_token: str = Body(..., embed=True),
+                               db: AsyncSession = Depends(get_db),
+                               redis: Redis = Depends(get_redis)):
     """
     Обновление токенов с использованием refresh токена.
 
@@ -126,6 +130,9 @@ async def refresh_access_token(refresh_token: str = Body(..., embed=True), db: A
 
     refresh_token_expires = timedelta(days=7)
     new_refresh_token = AuthService.create_refresh_token(data={"sub": username}, expires_delta=refresh_token_expires)
+
+    # Сохраняем новый refresh токен в Redis с истечением срока действия
+    await redis.setex(f"refresh_token:{username}", refresh_token_expires.total_seconds(), new_refresh_token)
 
     return {
         "access_token": access_token,

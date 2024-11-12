@@ -5,18 +5,22 @@ from fastapi import FastAPI
 from fastapi.routing import APIRouter
 
 
-from handlers import router, logger
+from app.handlers import router, logger
 
 from database.db import init_db
+from database.redis import init_redis, close_redis
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    init_db()
+    await init_db()
+    await init_redis()
 
     logger.info("Приложение успешно запущено")
     yield
+
+    await close_redis()
 
 
 app = FastAPI(title="task_manager", lifespan=lifespan)
